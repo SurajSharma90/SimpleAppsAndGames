@@ -18,11 +18,23 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Tile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameBoard.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Button.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Tile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameBoard.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Button.h">
       <Filter>Header Files</Filter>
     </ClInclude>

@@ -20,10 +20,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Button.cpp" />
+    <ClCompile Include="GameBoard.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Button.h" />
+    <ClInclude Include="GameBoard.h" />
+    <ClInclude Include="Tile.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
