@@ -7,9 +7,12 @@ Tile::Tile()
   this->type = -1;
 }
 
-Tile::Tile(sf::Texture* texture)
+Tile::Tile(sf::Vector2f position, sf::Texture* texture, short type)
 {
-  
+  this->type = type;
+  this->texture = texture;
+  this->shape.setTexture(*this->texture);
+  this->visible = false;
 }
 
 Tile::~Tile()

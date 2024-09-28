@@ -3,6 +3,8 @@
 #include<SFML/Graphics.hpp>
 #include<SFML/System.hpp>
 
+enum TILE_TYPES{INACTIVE=0, ACTIVE=1};
+
 class Tile
 {
   private:
@@ -13,12 +15,13 @@ class Tile
 
   public:
   Tile();
-  Tile(sf::Texture* texture);
+  Tile(sf::Vector2f position, sf::Texture* texture, short type);
   ~Tile();
 
   const bool isPressed(const sf::Vector2f& mousePosView);
 
   void setPosition(const sf::Vector2f& position);
+  void inline setVisible(const bool visible) {this->visible = visible;}
   
   void show();
 

@@ -2,7 +2,7 @@
 
 int main()
 {
-  sf::RenderWindow window(sf::VideoMode(800,600), "Memory Game");
+  sf::RenderWindow window(sf::VideoMode(1500,1000), "Memory Game");
   
   GameBoard gameBoard(&window);
 
