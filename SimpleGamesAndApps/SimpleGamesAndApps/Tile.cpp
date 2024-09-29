@@ -1,41 +1,54 @@
 #include "Tile.h"
 
 Tile::Tile()
-{
-  this->texture = nullptr;
+{ 
   this->visible = false;
-  this->type = -1;
+  this->active = false;
+  this->pressed = false;
 }
 
-Tile::Tile(sf::Vector2f position, sf::Texture* texture, short type)
+Tile::Tile(sf::Vector2f position, bool active)
 {
-  this->type = type;
-  this->texture = texture;
-  this->shape.setTexture(*this->texture);
+  this->active = active;
+  this->colorActive = sf::Color::Green;
+  this->colorInactive = sf::Color::Red;
+  this->shape.setFillColor(this->colorInactive);
+  this->shape.setSize(sf::Vector2f(100.f, 100.f));
+  this->shape.setOutlineThickness(2.f);
+  this->shape.setOutlineColor(sf::Color::White);
+  this->alphaIdle = 200;
+  this->alphaHover = 255;
+  this->alphaPressed = 100;
   this->visible = false;
+  this->pressed = false;
+  this->shape.setPosition(position);
 }
 
 Tile::~Tile()
 {
 }
 
-const bool Tile::isPressed(const sf::Vector2f& mousePosView)
+void Tile::update(const sf::Vector2f& mousePosView, const bool lmb_pressed)
 {
-  return false;
-}
+  this->pressed = false;
 
-void Tile::setPosition(const sf::Vector2f& position)
-{
-}
+  if (this->shape.getGlobalBounds().contains(mousePosView))
+  {
+    this->shape.setFillColor(sf::Color(this->shape.getFillColor().r, this->shape.getFillColor().g, this->shape.getFillColor().b, this->alphaHover));
 
-void Tile::show()
-{
-}
-
-void Tile::update()
-{
+    if (lmb_pressed)
+    {
+      this->shape.setFillColor(sf::Color(this->shape.getFillColor().r, this->shape.getFillColor().g, this->shape.getFillColor().b, this->alphaPressed));
+      this->pressed = true;
+    }
+  }
+  else
+  {
+    this->shape.setFillColor(sf::Color(this->shape.getFillColor().r, this->shape.getFillColor().g, this->shape.getFillColor().b, this->alphaIdle));
+  }
 }
 
 void Tile::render(sf::RenderTarget& target)
 {
+  target.draw(this->shape);
 }

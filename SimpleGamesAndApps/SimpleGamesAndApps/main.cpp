@@ -2,7 +2,9 @@
 
 int main()
 {
+  srand(time(0));
   sf::RenderWindow window(sf::VideoMode(1500,1000), "Memory Game");
+  window.setFramerateLimit(60);
   
   GameBoard gameBoard(&window);
 
