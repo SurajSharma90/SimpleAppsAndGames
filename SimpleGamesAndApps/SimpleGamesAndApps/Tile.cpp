@@ -16,9 +16,9 @@ Tile::Tile(sf::Vector2f position, bool active)
   this->shape.setSize(sf::Vector2f(100.f, 100.f));
   this->shape.setOutlineThickness(2.f);
   this->shape.setOutlineColor(sf::Color::White);
-  this->alphaIdle = 200;
+  this->alphaIdle = 100;
   this->alphaHover = 255;
-  this->alphaPressed = 100;
+  this->alphaPressed = 50;
   this->visible = false;
   this->pressed = false;
   this->shape.setPosition(position);

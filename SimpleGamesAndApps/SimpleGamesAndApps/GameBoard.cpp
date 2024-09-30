@@ -26,7 +26,7 @@ void GameBoard::initializeButtons()
   this->buttonsMap[buttonName] = new Button(sf::Vector2f(50.f, 500.f), &this->textures[buttonName + "_idle"], &this->textures[buttonName + "_hover"], &this->textures[buttonName + "_pressed"]);
 }
 
-void GameBoard::createBoard(int board_width, int board_height, int nr_active)
+void GameBoard::createBoard(int board_width, int board_height)
 {
   float tile_width = 100.f;
   float tile_height = 100.f;
@@ -44,7 +44,7 @@ void GameBoard::createBoard(int board_width, int board_height, int nr_active)
   }
 }
 
-void GameBoard::randomizeBoard(int nr_active)
+void GameBoard::randomizeBoard()
 {
   this->orderVec.clear();
   std::vector<int> index_vector;
@@ -55,7 +55,7 @@ void GameBoard::randomizeBoard(int nr_active)
 
   int tiles_added = 0;
   int index = -1;
-  while (tiles_added != nr_active)
+  while (tiles_added != this->nrActiveTiles)
   {
     index = rand()%index_vector.size()-1;
     this->tilesVec[index_vector[index]]->setActive(true);
@@ -68,6 +68,22 @@ void GameBoard::randomizeBoard(int nr_active)
   for (size_t i = 0; i < this->orderVec.size(); i++)
   {
     std::cout << orderVec[i] << " ";
+  }
+}
+
+void GameBoard::displayOrder()
+{
+  //Show board
+  for (size_t i = 0; i < this->tilesVec.size(); i++)
+  {
+    this->tilesVec[i]->setColorInactive();
+  }
+  
+  //Show board active tiles in order
+  for (size_t i = 0; i < this->tilesVec.size(); i++)
+  {
+    if (this->tilesVec[i]->getActive())
+      this->tilesVec[i]->setColorActive();
   }
 }
 
@@ -94,39 +110,13 @@ void GameBoard::updateButtons()
 
 void GameBoard::updateBoard()
 {
-  //Show board
-  for (size_t i = 0; i < this->tilesVec.size(); i++)
-  {
-    this->tilesVec[i]->setColorInactive();
-  }
-
-  Sleep(5);
-
-  //Show board active tiles in order
-  for (size_t i = 0; i < this->tilesVec.size(); i++)
-  {
-    if(this->tilesVec[i]->getActive())
-      this->tilesVec[i]->setColorActive();
-      Sleep(1);
-  }
-
-  Sleep(5);
-
-  //Hide active tiles
-  for (size_t i = 0; i < this->tilesVec.size(); i++)
-  {
-    this->tilesVec[i]->setColorInactive();
-  }
-
-  //Allow input
-
   for (size_t i = 0; i < this->tilesVec.size(); i++)
   {
     this->tilesVec[i]->update(this->mousePosView, sf::Mouse::isButtonPressed(sf::Mouse::Left));
 
     if (this->tilesVec[i]->isPressed())
     {
-
+        
     }
   }
 }
@@ -137,11 +127,12 @@ GameBoard::GameBoard(sf::RenderWindow* window, int board_width, int board_height
   this->exitGame = false;
   this->keyTimeMax = 1000.f;
   this->keyTime = this->keyTimeMax;
+  this->nrActiveTiles = nr_active;
 
   this->loadTextures();
   this->initializeButtons();
-  this->createBoard(board_width, board_height, nr_active);
-  this->randomizeBoard(nr_active);
+  this->createBoard(board_width, board_height);
+  this->randomizeBoard();
 }
 
 GameBoard::~GameBoard()

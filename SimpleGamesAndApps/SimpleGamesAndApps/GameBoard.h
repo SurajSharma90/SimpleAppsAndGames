@@ -19,11 +19,13 @@ private:
   float keyTime, keyTimeMax;
   sf::Vector2f mousePosView;
   bool exitGame;
+  int nrActiveTiles;
 
   void loadTextures();
   void initializeButtons();
-  void createBoard(int board_width, int board_height, int nr_active);
-  void randomizeBoard(int nr_active);
+  void createBoard(int board_width, int board_height);
+  void randomizeBoard();
+  void displayOrder();
 
   void updateKeyTime();
   void updateButtons();
