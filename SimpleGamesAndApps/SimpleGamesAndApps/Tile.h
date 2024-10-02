@@ -18,7 +18,7 @@ class Tile
 
   public:
   Tile();
-  Tile(sf::Vector2f position, bool active);
+  Tile(sf::Vector2f position, float size, bool active);
   ~Tile();
 
   inline const bool isPressed() {return this->pressed;}

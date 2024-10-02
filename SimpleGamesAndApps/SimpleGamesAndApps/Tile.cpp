@@ -7,13 +7,13 @@ Tile::Tile()
   this->pressed = false;
 }
 
-Tile::Tile(sf::Vector2f position, bool active)
+Tile::Tile(sf::Vector2f position, float size, bool active)
 {
   this->active = active;
   this->colorActive = sf::Color::Green;
   this->colorInactive = sf::Color::Red;
   this->shape.setFillColor(this->colorInactive);
-  this->shape.setSize(sf::Vector2f(100.f, 100.f));
+  this->shape.setSize(sf::Vector2f(size, size));
   this->shape.setOutlineThickness(2.f);
   this->shape.setOutlineColor(sf::Color::White);
   this->alphaIdle = 100;

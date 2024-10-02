@@ -1,45 +1,18 @@
 #include "GameBoard.h"
 
-void GameBoard::loadTextures()
-{ 
-  std::string buttonName = "button_exit";
-  if (!this->textures[buttonName + "_idle"].loadFromFile("Textures/" + buttonName + "_idle.png")) std::cout << "Could not load texture " + buttonName + "_idle.png";
-  if (!this->textures[buttonName + "_hover"].loadFromFile("Textures/" + buttonName + "_hover.png")) std::cout << "Could not load texture " + buttonName + "_hover.png";
-  if (!this->textures[buttonName + "_pressed"].loadFromFile("Textures/" + buttonName + "_pressed.png")) std::cout << "Could not load texture " + buttonName + "_pressed.png";
-  buttonName = "button_restart";
-  if (!this->textures[buttonName + "_idle"].loadFromFile("Textures/" + buttonName + "_idle.png")) std::cout << "Could not load texture " + buttonName + "_idle.png";
-  if (!this->textures[buttonName + "_hover"].loadFromFile("Textures/" + buttonName + "_hover.png")) std::cout << "Could not load texture " + buttonName + "_hover.png";
-  if (!this->textures[buttonName + "_pressed"].loadFromFile("Textures/" + buttonName + "_pressed.png")) std::cout << "Could not load texture " + buttonName + "_pressed.png";
-  buttonName = "button_submit";
-  if (!this->textures[buttonName + "_idle"].loadFromFile("Textures/" + buttonName + "_idle.png")) std::cout << "Could not load texture " + buttonName + "_idle.png";
-  if (!this->textures[buttonName + "_hover"].loadFromFile("Textures/" + buttonName + "_hover.png")) std::cout << "Could not load texture " + buttonName + "_hover.png";
-  if (!this->textures[buttonName + "_pressed"].loadFromFile("Textures/" + buttonName + "_pressed.png")) std::cout << "Could not load texture " + buttonName + "_pressed.png";
-}
-
-void GameBoard::initializeButtons()
-{
-  std::string buttonName = "button_exit";
-  this->buttonsMap[buttonName] = new Button(sf::Vector2f(650.f, 500.f), &this->textures[buttonName + "_idle"], &this->textures[buttonName + "_hover"], &this->textures[buttonName + "_pressed"]);
-  buttonName = "button_restart";
-  this->buttonsMap[buttonName] = new Button(sf::Vector2f(350.f, 500.f), &this->textures[buttonName + "_idle"], &this->textures[buttonName + "_hover"], &this->textures[buttonName + "_pressed"]);
-  buttonName = "button_submit";
-  this->buttonsMap[buttonName] = new Button(sf::Vector2f(50.f, 500.f), &this->textures[buttonName + "_idle"], &this->textures[buttonName + "_hover"], &this->textures[buttonName + "_pressed"]);
-}
-
 void GameBoard::createBoard(int board_width, int board_height)
 {
-  float tile_width = 100.f;
-  float tile_height = 100.f;
+  float tile_size = this->tileSize;
   float x = 0.f;
   float y = 0.f;
   for (size_t i = 0; i < board_height; i++)
   {
     for (size_t i = 0; i < board_width; i++)
     {
-      this->tilesVec.push_back(new Tile(sf::Vector2f(x, y), false));
-      x += tile_width;
+      this->tilesVec.push_back(new Tile(sf::Vector2f(x, y), this->tileSize, false));
+      x += tile_size;
     }
-    y += tile_height;
+    y += tile_size;
     x = 0.f;
   }
 }
@@ -47,6 +20,14 @@ void GameBoard::createBoard(int board_width, int board_height)
 void GameBoard::randomizeBoard()
 {
   this->orderVec.clear();
+  this->activeTilesVec.clear();
+
+  for (size_t i = 0; i < this->tilesVec.size(); i++)
+  {
+    this->tilesVec[i]->setActive(false);
+    this->tilesVec[i]->setColorInactive();
+  }
+
   std::vector<int> index_vector;
   for (size_t i = 0; i < this->tilesVec.size(); i++)
   {
@@ -57,34 +38,56 @@ void GameBoard::randomizeBoard()
   int index = -1;
   while (tiles_added != this->nrActiveTiles)
   {
-    index = rand()%index_vector.size()-1;
+    index = rand()%index_vector.size();
     this->tilesVec[index_vector[index]]->setActive(true);
     this->tilesVec[index_vector[index]]->setColorActive();
+    this->activeTilesVec.push_back(index_vector[index]);
     this->orderVec.push_back(index_vector[index]);
     index_vector.erase(index_vector.begin() + index);
     tiles_added++;
-  }
-
-  for (size_t i = 0; i < this->orderVec.size(); i++)
-  {
-    std::cout << orderVec[i] << " ";
   }
 }
 
 void GameBoard::displayOrder()
 {
   //Show board
-  for (size_t i = 0; i < this->tilesVec.size(); i++)
+  if(this->displayTimer < 50.f)
+  { 
+    for (size_t i = 0; i < this->tilesVec.size(); i++)
+    {
+      this->tilesVec[i]->setColorInactive();
+    }
+  }
+  else if (this->displayTimer >= 50.f && this->displayTimer < 100.f)
+  { 
+    //Show board active tiles
+    for (size_t i = 0; i < this->tilesVec.size(); i++)
+    {
+      if (this->tilesVec[i]->getActive())
+        this->tilesVec[i]->setColorActive();
+    }
+  }
+  else if (this->displayTimer >= 100.f && this->displayTimer < 150.f)
   {
-    this->tilesVec[i]->setColorInactive();
+    for (size_t i = 0; i < this->tilesVec.size(); i++)
+    {
+      this->tilesVec[i]->setColorInactive();
+    }
+  }
+  else
+  {
+    this->restarting = false;
   }
   
-  //Show board active tiles in order
-  for (size_t i = 0; i < this->tilesVec.size(); i++)
-  {
-    if (this->tilesVec[i]->getActive())
-      this->tilesVec[i]->setColorActive();
-  }
+  this->displayTimer += 1.f;
+}
+
+const bool GameBoard::checkSelection()
+{
+  std::sort(this->activeTilesVec.begin(), this->activeTilesVec.end());
+  std::sort(this->selectionVec.begin(), this->selectionVec.end());
+
+  return this->activeTilesVec == this->selectionVec;
 }
 
 void GameBoard::updateKeyTime()
@@ -93,56 +96,76 @@ void GameBoard::updateKeyTime()
     this->keyTime += 1.f;
 }
 
-void GameBoard::updateButtons()
-{
-  std::map<std::string, Button*>::iterator it;
-  for (it = this->buttonsMap.begin(); it != this->buttonsMap.end(); it++)
-  {
-    it->second->update(this->mousePosView, sf::Mouse::isButtonPressed(sf::Mouse::Left));
-  }
-
-  if (this->buttonsMap["button_exit"]->isPressed() && this->checkKeyTime())
-  {
-    this->exitGame = true;
-    this->resetKeyTime();
-  }
-}
-
 void GameBoard::updateBoard()
 {
-  for (size_t i = 0; i < this->tilesVec.size(); i++)
+  if (this->restarting)
   {
-    this->tilesVec[i]->update(this->mousePosView, sf::Mouse::isButtonPressed(sf::Mouse::Left));
+    this->displayOrder();
+  }
+  else
+  {
+    if(this->tilesSelected < this->nrActiveTiles)
+    { 
+      for (size_t i = 0; i < this->tilesVec.size(); i++)
+      {
+        this->tilesVec[i]->update(this->mousePosView, sf::Mouse::isButtonPressed(sf::Mouse::Left));
 
-    if (this->tilesVec[i]->isPressed())
+        if (this->tilesVec[i]->isPressed() && this->keyTime >= this->keyTimeMax)
+        {
+          this->selectionVec.push_back(i);
+          this->tilesVec[i]->setColorActive();
+          this->tilesSelected++;
+          this->keyTime = 0.f;
+        }
+      }
+    }
+    else
     {
-        
+      if(this->checkSelection())
+      { 
+        std::cout << "Correct!" << "\n";
+        this->correct++;
+      }
+      else
+      {
+        std::cout << "Incorrect!" << "\n";
+        this->incorrect++;
+      }
+      std::cout << "Correct/Incorrect: " << this->correct << "/" << this->incorrect << "\n";
+      this->restart();
     }
   }
 }
 
-GameBoard::GameBoard(sf::RenderWindow* window, int board_width, int board_height, int nr_active)
+GameBoard::GameBoard(sf::RenderWindow* window, float tile_size, int board_width, int board_height, int nr_active)
 : window(window)
 {
+  this->tileSize = tile_size;
   this->exitGame = false;
-  this->keyTimeMax = 1000.f;
+  this->keyTimeMax = 10.f;
   this->keyTime = this->keyTimeMax;
   this->nrActiveTiles = nr_active;
+  this->tilesSelected = 0;
+  this->restarting = true;
+  this->displayTimer = 0.f;
+  this->correct = 0;
+  this->incorrect = 0;
 
-  this->loadTextures();
-  this->initializeButtons();
   this->createBoard(board_width, board_height);
   this->randomizeBoard();
 }
 
 GameBoard::~GameBoard()
 {
-  //Delete buttonsMap
-  std::map<std::string, Button*>::iterator it;
-  for (it = this->buttonsMap.begin(); it != this->buttonsMap.end(); it++)
-  {
-    delete it->second;
-  }
+}
+
+void GameBoard::restart()
+{
+  this->tilesSelected = 0;
+  this->restarting = true;
+  this->displayTimer = 0.f;
+  this->selectionVec.clear();
+  this->randomizeBoard();
 }
 
 void GameBoard::update(sf::RenderWindow& window)
@@ -150,18 +173,11 @@ void GameBoard::update(sf::RenderWindow& window)
   this->mousePosView = window.mapPixelToCoords(sf::Mouse::getPosition(window));
 
   this->updateKeyTime();
-  this->updateButtons();
   this->updateBoard();
 }
 
 void GameBoard::render(sf::RenderTarget& target)
 {
-  std::map<std::string, Button*>::iterator it;
-  for (it = this->buttonsMap.begin(); it != this->buttonsMap.end(); it++)
-  {
-    it->second->render(target);
-  }
-
   for (size_t i = 0; i < this->tilesVec.size(); i++)
   {
     this->tilesVec[i]->render(target);
