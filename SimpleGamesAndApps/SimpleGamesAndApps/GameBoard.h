@@ -12,10 +12,8 @@ class GameBoard
 {
 private:
   sf::RenderWindow* window;
-  std::map<std::string, sf::Texture> textures;
   std::vector<Tile*> tilesVec;
   std::vector<int> activeTilesVec;
-  std::vector<int> orderVec;
   std::vector<int> selectionVec;
   float keyTime, keyTimeMax;
   sf::Vector2f mousePosView;

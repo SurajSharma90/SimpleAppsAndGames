@@ -19,7 +19,6 @@ void GameBoard::createBoard(int board_width, int board_height)
 
 void GameBoard::randomizeBoard()
 {
-  this->orderVec.clear();
   this->activeTilesVec.clear();
 
   for (size_t i = 0; i < this->tilesVec.size(); i++)
@@ -42,7 +41,6 @@ void GameBoard::randomizeBoard()
     this->tilesVec[index_vector[index]]->setActive(true);
     this->tilesVec[index_vector[index]]->setColorActive();
     this->activeTilesVec.push_back(index_vector[index]);
-    this->orderVec.push_back(index_vector[index]);
     index_vector.erase(index_vector.begin() + index);
     tiles_added++;
   }
@@ -110,12 +108,12 @@ void GameBoard::updateBoard()
       {
         this->tilesVec[i]->update(this->mousePosView, sf::Mouse::isButtonPressed(sf::Mouse::Left));
 
-        if (this->tilesVec[i]->isPressed() && this->keyTime >= this->keyTimeMax)
+        if (this->tilesVec[i]->isPressed() && this->checkKeyTime())
         {
           this->selectionVec.push_back(i);
           this->tilesVec[i]->setColorActive();
           this->tilesSelected++;
-          this->keyTime = 0.f;
+          this->resetKeyTime();
         }
       }
     }
