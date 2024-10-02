@@ -2,9 +2,11 @@
 
 Tile::Tile()
 { 
-  this->visible = false;
   this->active = false;
   this->pressed = false;
+  this->alphaIdle = 0.f;
+  this->alphaHover = 0.f;
+  this->alphaPressed = 0.f;
 }
 
 Tile::Tile(sf::Vector2f position, float size, bool active)
@@ -19,7 +21,6 @@ Tile::Tile(sf::Vector2f position, float size, bool active)
   this->alphaIdle = 100;
   this->alphaHover = 255;
   this->alphaPressed = 50;
-  this->visible = false;
   this->pressed = false;
   this->shape.setPosition(position);
 }
