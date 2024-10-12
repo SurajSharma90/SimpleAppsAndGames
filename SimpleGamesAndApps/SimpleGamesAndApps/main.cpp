@@ -1,7 +1,6 @@
 #include "Player.h"
 #include "Enemy.h"
 #include <time.h>
-#include <vector>
 
 void movePlayer(Player& player);
 
@@ -41,6 +40,18 @@ int main()
     for (size_t i = 0; i < enemyVec.size(); i++)
     {
       enemyVec[i]->update(player.getCenter());
+      for (size_t k = 0; k < enemyVec.size(); k++)
+      {
+        if (enemyVec[i] != enemyVec[k])
+        {
+          if (enemyVec[i]->getGlobalBounds().intersects(enemyVec[k]->getGlobalBounds()))
+          {
+            sf::Vector2f dir = sf::Vector2f(enemyVec[i]->getCenter() - enemyVec[k]->getCenter());
+            enemyVec[i]->move(dir, 0.1f);
+            enemyVec[k]->move(-dir, 0.1f);
+          }
+        }
+      }
     }
 
     //Render

@@ -27,6 +27,11 @@ void Enemy::move(sf::Vector2f target_position)
   //this->shape.rotate(this->rotation);
 }
 
+void Enemy::move(sf::Vector2f direction, float amount)
+{
+  this->shape.move(direction * amount);
+}
+
 void Enemy::update(sf::Vector2f target_position)
 {
  this->move(target_position);

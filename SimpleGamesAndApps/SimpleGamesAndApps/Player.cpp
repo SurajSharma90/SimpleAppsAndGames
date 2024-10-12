@@ -10,7 +10,10 @@ Player::Player()
 
 Player::~Player()
 {
-
+  for (size_t i = 0; i < this->bullets.size(); i++)
+  {
+    delete this->bullets[i];
+  }
 }
 
 const sf::Vector2f Player::getCenter() const
@@ -21,6 +24,16 @@ const sf::Vector2f Player::getCenter() const
 void Player::move(const sf::Vector2f& direction)
 {
   this->shape.move(moveSpeed * direction);
+}
+
+void Player::shoot(const sf::Vector2f& direction)
+{
+  
+}
+
+void Player::moveBullets()
+{
+
 }
 
 void Player::update()
