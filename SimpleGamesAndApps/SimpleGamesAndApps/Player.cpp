@@ -32,7 +32,7 @@ void Player::shoot(const sf::Vector2f direction)
 {
   if(this->shootTimer >= this->shootTimerMax)
   {
-    this->bullets.push_back(new Bullet(this->getCenter(), direction, 5.f, 20.f));
+    this->bullets.push_back(new Bullet(this->getCenter(), direction, 10.f, 50.f));
     this->shootTimer = 0.f;
   }
 }

@@ -53,7 +53,7 @@ void Enemy::move(sf::Vector2f direction, float amount)
 
 void Enemy::update(sf::Vector2f target_position)
 {
- //this->move(target_position);
+  this->move(target_position);
 }
 
 void Enemy::render(sf::RenderTarget& target)
